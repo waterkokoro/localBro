@@ -16,7 +16,7 @@
 
 ---
 
-## ✨ AI版本的文件管理器
+## ✨ AI版本的文件管理器、支持插件、皮肤
 
 传统文件管理器做一件事：**让你点来点去**。LocalBro 做的是：**让你说一句话，AI 帮你搞定剩下的事**。
 
@@ -195,7 +195,7 @@ localbro/
 
 ---
 
-## ✨ AI file manager
+## ✨ AI file manager, support plugins and skins
 
 Traditional file managers do one thing: **let you click around**. LocalBro does something different: **you describe what you want, and AI handles the rest**.
 
