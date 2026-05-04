@@ -16,7 +16,7 @@
 
 ---
 
-## ✨ 这不是又一个文件管理器
+## ✨ AI版本的文件管理器
 
 传统文件管理器做一件事：**让你点来点去**。LocalBro 做的是：**让你说一句话，AI 帮你搞定剩下的事**。
 
@@ -86,7 +86,9 @@
 
 ## 📸 截图
 
-> _(截图占位 — 欢迎 PR 补充！)_
+![AI 协作模式：自然语言批量创建文件](showpic/localbro-ai.png)
+
+> 示例：对话框里输入一句话，AI 调用 `create_files` 工具，5 个空文件瞬间出现在文件列表中。左侧为 Collection 收藏夹，右侧为 AI 对话面板（含工具调用审计卡片）。
 
 ---
 
@@ -193,7 +195,7 @@ localbro/
 
 ---
 
-## ✨ This is not just another file manager
+## ✨ AI file manager
 
 Traditional file managers do one thing: **let you click around**. LocalBro does something different: **you describe what you want, and AI handles the rest**.
 
@@ -216,6 +218,14 @@ Traditional file managers do one thing: **let you click around**. LocalBro does 
 | Privacy | Local | **Fully local**, uses your own API Key, zero data upload |
 | Extensibility | Not possible | Pack plugin system — contribute AI tools / preview renderers / skins |
 | Themes | System light/dark only | Full skin system, CSS-variable-level customization |
+
+---
+
+## 📸 Screenshots
+
+![AI Collaboration Mode: Batch file creation via natural language](showpic/localbro-ai.png)
+
+> Example: type one sentence in the chat, AI calls `create_files`, and 5 empty files appear instantly in the file list. Left: Collection sidebar. Right: AI panel with tool-call audit cards.
 
 ---
 
