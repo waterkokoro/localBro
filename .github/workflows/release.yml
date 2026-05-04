@@ -106,17 +106,13 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # ── macOS code-signing (optional) ──────────────────────────────────
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          # ── macOS notarisation (optional, requires signing) ─────────────────
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           # ── Windows code-signing (optional) ────────────────────────────────
+          # To enable: add WINDOWS_CERTIFICATE / WINDOWS_CERTIFICATE_PASSWORD secrets
           WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
           WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+          # ── macOS code-signing (optional) ──────────────────────────────────
+          # To enable: add APPLE_CERTIFICATE (base64 .p12), APPLE_CERTIFICATE_PASSWORD,
+          # APPLE_SIGNING_IDENTITY, APPLE_ID, APPLE_ID_PASSWORD, APPLE_TEAM_ID secrets
         with:
           tagName: ${{ github.ref_name }}
           releaseName: "LocalBro ${{ github.ref_name }}"
