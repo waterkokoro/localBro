@@ -2,7 +2,7 @@
 # LocalBro — Release CI
 #
 # Triggered when you push a version tag (e.g. v0.1.0).
-# Builds native installers for macOS (arm64 + x86_64), Windows, and Linux,
+# Builds native installers for macOS (universal), Windows, and Linux,
 # then creates a GitHub Release with all artifacts attached as assets.
 #
 # Required GitHub Secrets (Settings → Secrets → Actions):
@@ -30,21 +30,20 @@ on:
 permissions:
   contents: write
 
+# Use Node.js 24 to avoid deprecation errors (Node 20 removed Sep 2026).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-and-release:
     strategy:
       fail-fast: false   # let other platforms finish even if one fails
       matrix:
         include:
-          # ── macOS Apple Silicon ──────────────────────────────────────────
-          - platform: macos-latest
-            target: aarch64-apple-darwin
-            label: macos-arm64
-
-          # ── macOS Intel ──────────────────────────────────────────────────
-          - platform: macos-latest
-            target: x86_64-apple-darwin
-            label: macos-x64
+          # ── macOS Universal (arm64 + x86_64 fat binary) ───────────────────
+          - platform: macos-14
+            target: universal-apple-darwin
+            label: macos-universal
 
           # ── Linux (Debian / Ubuntu) ───────────────────────────────────────
           - platform: ubuntu-22.04
@@ -75,9 +74,9 @@ jobs:
       - name: Setup Rust (stable)
         uses: dtolnay/rust-toolchain@stable
         with:
-          # Both macOS targets are needed on the macos-latest runner.
+          # universal-apple-darwin requires both macOS targets.
           targets: >-
-            ${{ matrix.platform == 'macos-latest'
+            ${{ matrix.platform == 'macos-14'
                 && 'aarch64-apple-darwin,x86_64-apple-darwin'
                 || '' }}
 
@@ -128,8 +127,7 @@ jobs:
             ## Download
             | Platform | File |
             |----------|------|
-            | macOS (Apple Silicon) | `LocalBro_*_aarch64.dmg` |
-            | macOS (Intel)         | `LocalBro_*_x64.dmg`     |
+            | macOS (Universal)     | `LocalBro_*_universal.dmg` |
             | Windows               | `LocalBro_*_x64-setup.exe` |
             | Linux (deb)           | `localbro_*_amd64.deb`   |
             | Linux (AppImage)      | `localbro_*_amd64.AppImage` |
