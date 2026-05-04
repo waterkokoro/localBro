@@ -1,0 +1,78 @@
+/* ================================================================
+ * LocalBro - Default Skin Tokens
+ *
+ * All visual attributes (colours, spacing, radii, fonts) must be
+ * expressed as CSS custom properties here. Skin packs override
+ * this file via `tokens.css` and optionally `overrides.css`.
+ * ================================================================ */
+
+:root {
+  color-scheme: light dark;
+
+  /* --- Palette -------------------------------------------------- */
+  --lb-bg:             #ffffff;
+  --lb-bg-elevated:    #f7f8fa;
+  --lb-bg-sidebar:     #f1f2f5;
+  --lb-bg-hover:       rgba(0, 0, 0, 0.05);
+  --lb-bg-selected:    #dce8fb;
+  --lb-bg-selected-fg: #0b57d0;
+
+  --lb-fg:             #1f1f22;
+  --lb-fg-muted:       #6b7280;
+  --lb-fg-subtle:      #9ca3af;
+  --lb-border:         rgba(0, 0, 0, 0.08);
+  --lb-border-strong:  rgba(0, 0, 0, 0.15);
+
+  --lb-accent:         #0b57d0;
+  --lb-accent-fg:      #ffffff;
+  --lb-danger:         #d23f31;
+
+  /* --- Shape ---------------------------------------------------- */
+  --lb-radius-sm: 4px;
+  --lb-radius-md: 6px;
+  --lb-radius-lg: 10px;
+
+  /* --- Spacing -------------------------------------------------- */
+  --lb-space-1: 4px;
+  --lb-space-2: 8px;
+  --lb-space-3: 12px;
+  --lb-space-4: 16px;
+  --lb-space-5: 24px;
+
+  /* --- Typography ---------------------------------------------- */
+  --lb-font: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+  --lb-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  --lb-fs-xs: 11px;
+  --lb-fs-sm: 12px;
+  --lb-fs-md: 13px;
+  --lb-fs-lg: 15px;
+
+  /* --- Layout --------------------------------------------------- */
+  --lb-sidebar-width: 220px;
+  --lb-toolbar-height: 52px;
+  --lb-statusbar-height: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --lb-bg:             #1c1d21;
+    --lb-bg-elevated:    #24262c;
+    --lb-bg-sidebar:     #17181c;
+    --lb-bg-hover:       rgba(255, 255, 255, 0.06);
+    --lb-bg-selected:    #0b3b86;
+    --lb-bg-selected-fg: #ffffff;
+
+    --lb-fg:             #e6e7ea;
+    --lb-fg-muted:       #9aa1ac;
+    --lb-fg-subtle:      #6c7380;
+    --lb-border:         rgba(255, 255, 255, 0.08);
+    --lb-border-strong:  rgba(255, 255, 255, 0.18);
+
+    --lb-accent:         #4f9dff;
+    --lb-accent-fg:      #0b1224;
+    --lb-danger:         #ff6a5a;
+  }
+}

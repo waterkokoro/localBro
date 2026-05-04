@@ -1,0 +1,25 @@
+/*
+ * Example skin "Sunset" — reference implementation.
+ * Drop any or all of these vars to keep defaults.
+ * See PACKS.md for the full token reference.
+ */
+:root {
+  color-scheme: dark;
+
+  --lb-bg:             #1a1320;
+  --lb-bg-elevated:    #241828;
+  --lb-bg-sidebar:     #130d18;
+  --lb-bg-hover:       rgba(255, 175, 128, 0.08);
+  --lb-bg-selected:    #e55934;
+  --lb-bg-selected-fg: #fff5ee;
+
+  --lb-fg:             #fbeee0;
+  --lb-fg-muted:       #c5a79a;
+  --lb-fg-subtle:      #8a6b62;
+  --lb-border:         rgba(251, 238, 224, 0.1);
+  --lb-border-strong:  rgba(251, 238, 224, 0.25);
+
+  --lb-accent:         #ffb074;
+  --lb-accent-fg:      #1a1320;
+  --lb-danger:         #ff6b6b;
+}

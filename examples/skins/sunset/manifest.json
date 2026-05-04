@@ -1,0 +1,15 @@
+{
+  "manifestVersion": 1,
+  "id": "com.localbro.example-sunset",
+  "type": "skin",
+  "name": "Sunset",
+  "version": "1.0.0",
+  "description": "Warm orange/pink accent over a soft dark base. A reference Pack — copy this folder and tweak tokens.css to author your own.",
+  "author": { "name": "LocalBro" },
+  "license": "MIT",
+  "engine": { "localbro": "^0.1.0" },
+  "skin": {
+    "base": "dark",
+    "tokens": "tokens.css"
+  }
+}
