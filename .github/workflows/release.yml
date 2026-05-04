@@ -1,0 +1,138 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LocalBro — Release CI
+#
+# Triggered when you push a version tag (e.g. v0.1.0).
+# Builds native installers for macOS (arm64 + x86_64), Windows, and Linux,
+# then creates a GitHub Release with all artifacts attached as assets.
+#
+# Required GitHub Secrets (Settings → Secrets → Actions):
+#   GITHUB_TOKEN          — auto-provided, no setup needed
+#
+# Optional (code-signing — skip if you just want unsigned builds):
+#   APPLE_CERTIFICATE        — Base64-encoded .p12 certificate
+#   APPLE_CERTIFICATE_PASSWORD
+#   APPLE_SIGNING_IDENTITY   — e.g. "Developer ID Application: Your Name (TEAMID)"
+#   APPLE_ID                 — Apple ID email (for notarisation)
+#   APPLE_ID_PASSWORD        — App-specific password
+#   APPLE_TEAM_ID
+#   WINDOWS_CERTIFICATE      — Base64-encoded .pfx (optional)
+#   WINDOWS_CERTIFICATE_PASSWORD
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"           # e.g. v0.1.0, v1.2.3-beta.1
+
+# Allow the action to create a release and upload assets.
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    strategy:
+      fail-fast: false   # let other platforms finish even if one fails
+      matrix:
+        include:
+          # ── macOS Apple Silicon ──────────────────────────────────────────
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+            label: macos-arm64
+
+          # ── macOS Intel ──────────────────────────────────────────────────
+          - platform: macos-latest
+            target: x86_64-apple-darwin
+            label: macos-x64
+
+          # ── Linux (Debian / Ubuntu) ───────────────────────────────────────
+          - platform: ubuntu-22.04
+            target: ""
+            label: linux-x64
+
+          # ── Windows ───────────────────────────────────────────────────────
+          - platform: windows-latest
+            target: ""
+            label: windows-x64
+
+    runs-on: ${{ matrix.platform }}
+    name: Build · ${{ matrix.label }}
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 2. Node.js ─────────────────────────────────────────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "npm"
+
+      # ── 3. Rust ────────────────────────────────────────────────────────────
+      - name: Setup Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          # Both macOS targets are needed on the macos-latest runner.
+          targets: >-
+            ${{ matrix.platform == 'macos-latest'
+                && 'aarch64-apple-darwin,x86_64-apple-darwin'
+                || '' }}
+
+      # Cache Rust build artefacts to speed up subsequent runs.
+      - name: Cache Cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "src-tauri -> target"
+
+      # ── 4. Linux system libraries ──────────────────────────────────────────
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf
+
+      # ── 5. Frontend dependencies ───────────────────────────────────────────
+      - name: Install npm dependencies
+        run: npm ci
+
+      # ── 6. Build + publish via tauri-action ────────────────────────────────
+      - name: Build & Release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # ── macOS code-signing (optional) ──────────────────────────────────
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          # ── macOS notarisation (optional, requires signing) ─────────────────
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # ── Windows code-signing (optional) ────────────────────────────────
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "LocalBro ${{ github.ref_name }}"
+          releaseBody: |
+            ## What's new
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+
+            ## Download
+            | Platform | File |
+            |----------|------|
+            | macOS (Apple Silicon) | `LocalBro_*_aarch64.dmg` |
+            | macOS (Intel)         | `LocalBro_*_x64.dmg`     |
+            | Windows               | `LocalBro_*_x64-setup.exe` |
+            | Linux (deb)           | `localbro_*_amd64.deb`   |
+            | Linux (AppImage)      | `localbro_*_amd64.AppImage` |
+          releaseDraft: true      # review before publishing
+          prerelease: ${{ contains(github.ref_name, '-') }}  # v1.0.0-beta → pre-release
+          args: ${{ matrix.target != '' && format('--target {0}', matrix.target) || '' }}
